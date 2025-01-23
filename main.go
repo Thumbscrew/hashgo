@@ -17,21 +17,22 @@ var (
 
 func main() {
 	app := &cli.App{
-		Name: "hashgo",
+		Name:  "hashgo",
+		Usage: "Hash files (with a progress bar)",
 		Flags: []cli.Flag{
 			&cli.PathFlag{
 				Name:     "path",
 				Aliases:  []string{"f"},
 				EnvVars:  []string{"HASHGO_PATH"},
 				Required: true,
-				Usage:    "path to file to hasher",
+				Usage:    "path to file to hash",
 			},
 			&cli.StringFlag{
 				Name:     "algorithm",
-				Aliases:  []string{"h"},
+				Aliases:  []string{"a"},
 				EnvVars:  []string{"HASHGO_ALGORITHM"},
 				Required: true,
-				Usage:    "hashing algorithm to use",
+				Usage:    "hashing algorithm to use (md5, sha1, sha224, sha256, sha384, sha512)",
 				Action: func(_ *cli.Context, s string) error {
 					if !slices.Contains(Algorithms, strings.ToLower(s)) {
 						return fmt.Errorf("invalid hashing algorithm: %s", s)
@@ -77,7 +78,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Print("fatal: ", err)
+		fmt.Printf("fatal: %s\n", err)
 		os.Exit(1)
 	}
 }
