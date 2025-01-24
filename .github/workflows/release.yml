@@ -5,6 +5,8 @@ on:
     tags:
       - "v1.*.*"
 
+permissions: write-all
+
 jobs:
   release:
     name: Create release
