@@ -38,7 +38,7 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Build ${{ matrix.os }}_${{ matrix.arch }}
-        run: go build -o bin/hashgo_${{ matrix.os }}_${{ matrix.arch }} main.go
+        run: go build -ldflags="-X 'main.Version=${{ github.ref }}'" -o bin/hashgo_${{ matrix.os }}_${{ matrix.arch }} main.go
         env:
           CGO_ENABLED: 0
           GOOS: ${{ matrix.os }}

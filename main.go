@@ -12,13 +12,21 @@ import (
 )
 
 var (
+	Version    = "dev"
 	Algorithms = []string{"md5", "sha1", "sha224", "sha256", "sha384", "sha512"}
 )
 
 func main() {
 	app := &cli.App{
-		Name:  "hashgo",
-		Usage: "Hash files (with a progress bar)",
+		Name:    "hashgo",
+		Usage:   "Hash files (with a progress bar)",
+		Version: Version,
+		Authors: []*cli.Author{
+			{
+				Name:  "Thumbscrew",
+				Email: "thumbscrw@pm.me",
+			},
+		},
 		Flags: []cli.Flag{
 			&cli.PathFlag{
 				Name:     "path",
