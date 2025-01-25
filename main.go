@@ -52,7 +52,8 @@ func main() {
 		},
 		Action: func(ctx *cli.Context) error {
 			var (
-				path = ctx.Path("path")
+				path      = ctx.Path("path")
+				algorithm = strings.ToLower(ctx.String("algorithm"))
 			)
 
 			fi, err := os.Stat(path)
@@ -73,10 +74,27 @@ func main() {
 				Progress: bar,
 			}
 
-			h, err := c.Sha256(f)
+			var h string
+			switch algorithm {
+			case "md5":
+				h, err = c.Md5(f)
+			case "sha1":
+				h, err = c.Sha1(f)
+			case "sha224":
+				h, err = c.Sha224(f)
+			case "sha256":
+				h, err = c.Sha256(f)
+			case "sha384":
+				h, err = c.Sha384(f)
+			case "sha512":
+				h, err = c.Sha512(f)
+			default:
+				return fmt.Errorf("invalid hashing algorithm: %s", algorithm)
+			}
 			if err != nil {
 				return err
 			}
+
 			_ = bar.Close()
 
 			fmt.Println(h)
