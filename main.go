@@ -1,14 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/Thumbscrew/hashgo/pkg/hasher"
 	"github.com/schollz/progressbar/v3"
+	"net/mail"
 	"os"
 	"slices"
 	"strings"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var (
@@ -17,31 +19,32 @@ var (
 )
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Name:    "hashgo",
 		Usage:   "Hash files (with a progress bar)",
 		Version: Version,
-		Authors: []*cli.Author{
-			{
-				Name:  "Thumbscrew",
-				Email: "thumbscrw@pm.me",
+		Authors: []any{
+			mail.Address{
+				Name:    "Thumbscrew",
+				Address: "thumbscrw@pm.me",
 			},
 		},
 		Flags: []cli.Flag{
-			&cli.PathFlag{
-				Name:     "path",
-				Aliases:  []string{"f"},
-				EnvVars:  []string{"HASHGO_PATH"},
-				Required: true,
-				Usage:    "path to file to hash",
+			&cli.StringFlag{
+				Name:      "path",
+				TakesFile: true,
+				Aliases:   []string{"f"},
+				Sources:   cli.EnvVars("HASHGO_PATH"),
+				Required:  true,
+				Usage:     "path to file to hash",
 			},
 			&cli.StringFlag{
 				Name:     "algorithm",
 				Aliases:  []string{"a"},
-				EnvVars:  []string{"HASHGO_ALGORITHM"},
+				Sources:  cli.EnvVars("HASHGO_ALGORITHM"),
 				Required: true,
 				Usage:    "hashing algorithm to use (md5, sha1, sha224, sha256, sha384, sha512)",
-				Action: func(_ *cli.Context, s string) error {
+				Action: func(_ context.Context, _ *cli.Command, s string) error {
 					if !slices.Contains(Algorithms, strings.ToLower(s)) {
 						return fmt.Errorf("invalid hashing algorithm: %s", s)
 					}
@@ -50,10 +53,10 @@ func main() {
 				},
 			},
 		},
-		Action: func(ctx *cli.Context) error {
+		Action: func(ctx context.Context, cmd *cli.Command) error {
 			var (
-				path      = ctx.Path("path")
-				algorithm = strings.ToLower(ctx.String("algorithm"))
+				path      = cmd.String("path")
+				algorithm = strings.ToLower(cmd.String("algorithm"))
 			)
 
 			fi, err := os.Stat(path)
@@ -103,7 +106,7 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.TODO(), os.Args); err != nil {
 		fmt.Printf("fatal: %s\n", err)
 		os.Exit(1)
 	}
