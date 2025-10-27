@@ -6,7 +6,7 @@ toolchain go1.23.5
 
 require (
 	github.com/schollz/progressbar/v3 v3.18.0
-	github.com/urfave/cli/v3 v3.4.1
+	github.com/urfave/cli/v3 v3.5.0
 )
 
 require (
