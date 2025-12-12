@@ -2,6 +2,9 @@
 
 Hash files and display progress. Useful for large files or slow storage!
 
+> [!WARNING]
+> This project has been archived and moved to [Codeberg](https://codeberg.org/thumbscrw/hashgo)
+
 ## Usage
 
 ```
